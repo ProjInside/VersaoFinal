@@ -36,12 +36,18 @@ public class SaveController : MonoBehaviour {
         Debug.Log("Valores carregados: | historia: " + jogo.id_historia + " | direita: " + jogo.id_direita + " | esquerda: " + jogo.id_esquerda);
     }
 
+    public void LoadMenu()
+    {
+        saveHistoria = PlayerPrefs.GetInt(historia_key);
+        saveDireita = PlayerPrefs.GetInt(direita_key);
+        saveEsquerda = PlayerPrefs.GetInt(esquerda_key);
+
+
+    }
     public void Delete()
     {                                
         PlayerPrefs.DeleteKey(historia_key);
         PlayerPrefs.DeleteKey(direita_key);
         PlayerPrefs.DeleteKey(esquerda_key);
-        Save(1, 1, 1);
-        Debug.Log("Jogo deletado!");
     }
 }

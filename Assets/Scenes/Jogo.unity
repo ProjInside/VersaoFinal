@@ -1789,9 +1789,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff27b08da44f859498f09c34433395e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveHistoria: 4
-  saveDireita: 3
-  saveEsquerda: 3
+  saveHistoria: 1
+  saveDireita: 1
+  saveEsquerda: 1
 --- !u!114 &2007033376
 MonoBehaviour:
   m_ObjectHideFlags: 0

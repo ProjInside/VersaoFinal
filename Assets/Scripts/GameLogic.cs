@@ -13,6 +13,7 @@ public class GameLogic : MonoBehaviour
     public Sound[] direita;
     private Sound somSource;
     private bool temArma = false, repete = false, fugir = false;
+    private int primeiraVez = 0;
 
     [HideInInspector]
     public static bool final = false;
@@ -34,7 +35,8 @@ public class GameLogic : MonoBehaviour
     void Awake()
     {
         saveManager = GameObject.Find("LogicaJogo").GetComponent<SaveController>();
-        saveManager.Load();
+        primeiraVez = PlayerPrefs.GetInt("Primeira");
+     
         if (instance == null)
             instance = this;
         else
@@ -66,13 +68,20 @@ public class GameLogic : MonoBehaviour
             som3.source.volume = Sound.volume;
             som3.source.outputAudioMixerGroup = mixer;
         }
-
+        saveManager.Load();
         Play(0, "instancia", esquerda);
         Play(0, "instancia", direita);
         Play(0, "instancia", historia);
-        StartCoroutine(Inicio());
+        if(primeiraVez == 0)
+        {
+            StartCoroutine(Inicio());
+        }
+        if(primeiraVez == 1)
+        {
+            StartCoroutine(Historia());
+        }
     }
-     
+
 
     void Update()
     {
@@ -87,8 +96,7 @@ public class GameLogic : MonoBehaviour
                 StartCoroutine(eDireita());
             }
         }
-
-        if(PauseMenu.estaPausado)
+        if (PauseMenu.estaPausado)
         {
             somSource.source.Pause();
         }
@@ -106,12 +114,13 @@ public class GameLogic : MonoBehaviour
         {
             yield return null;
         }
+        primeiraVez = 1;
+        PlayerPrefs.SetInt("Primeira", primeiraVez);
         StartCoroutine(Historia());
     }
 
     IEnumerator Historia()
     {
-        yield return null;
         if (id_historia == 1 && repete == false)
         {
            Play(1, "NarracaoInicial", historia);
@@ -274,6 +283,8 @@ public class GameLogic : MonoBehaviour
         }
         yield return new WaitForSeconds(0.5f);
         MiniTutorial.final = true;
+        primeiraVez = 0;
+        PlayerPrefs.DeleteKey("Primeira");
         saveManager.Delete();
         SceneManager.LoadScene(1);
     }

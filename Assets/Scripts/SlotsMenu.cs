@@ -29,18 +29,11 @@ public class SlotsMenu : MonoBehaviour
     void Awake()
     {
         saveManager = GameObject.Find("Slots").GetComponent<SaveController>();
+        _title.text = PlayerPrefs.GetString("jogar", _title.text);
     }
 
     void Start()
     {
-        if(MiniTutorial.final == false)
-        {
-            _title.text = PlayerPrefs.GetString("save1");
-        }
-        else
-        {
-            final(MiniTutorial.final);
-        }
         if(_title.text != "Novo jogo")
         {
             jogo.clip = JogarOndeParou.clip;
@@ -51,16 +44,20 @@ public class SlotsMenu : MonoBehaviour
         }
     }
 
-    void OnDisable()
-    {
-        PlayerPrefs.SetString("save1", _title.text);
-    }
-
     public void salvar()
     {
+        if (_title.text == "Novo jogo")
+        {
+            saveManager.Save(1, 1, 1);
+        }
+        if(_title.text != "Novo jogo")
+        {
+            saveManager.LoadMenu();
+        }
         jogo.clip = JogarOndeParou.clip;
         TelaCarregamento.SetActive(true);
         _title.text = "Save 1: dia " + DateTime.Now;
+        PlayerPrefs.SetString("jogar", _title.text);
         StartCoroutine(espera());
     }
     IEnumerator espera()
@@ -76,6 +73,8 @@ public class SlotsMenu : MonoBehaviour
             jogo.clip = NovoJogo.clip;
             SaveDeletado.Play();
             _title.text = "Novo jogo";
+            PlayerPrefs.SetString("jogar", _title.text);
+            saveManager.Delete();
             PlayerPrefs.DeleteKey(_title.text);
         }
         else
@@ -84,15 +83,4 @@ public class SlotsMenu : MonoBehaviour
         }
         
     }
-
-    public void final(bool final)
-    {
-        if(final == true)
-        {
-            jogo.clip = NovoJogo.clip;
-            _title.text = "Novo jogo";
-            MiniTutorial.final = false;
-        }
-    }
-
 }
